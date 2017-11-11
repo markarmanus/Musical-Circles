@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/circles.css">
 
 	<script type="text/paperscript" canvas="myCanvas">
+		// making an object with key value pairs represinting keyboard letter
 		var keyData = {
 			q: {
 				sound: new Howl({
@@ -165,49 +166,73 @@
 				color: '#2c3e50'
 			}
 		}
-
+		//empty list to store circles in 
 		var circles = [];
 		
+		//function called when mouse is clicked
 		function onMouseDown(event) {
+			//generate a random position to start the circle
 			var random = randomChar();
 			var maxPoint = new Point(view.size.width, view.size.height);
 			var randomPoint = Point.random();
 			var point = maxPoint * randomPoint;
+			
+			//creat the circle
 			var newCircle = new Path.Circle(point, 500)
 			newCircle.fillColor = keyData[random].color;
 			keyData[random].sound.play();
+			//adding the circle to the array circles
 			circles.push(newCircle);
-		
 		}
+		
+		//function called on pressing any keyboard button
 		function onKeyDown(event) {
+			//if the user preses a normal letter
 			if(keyData[event.key]){
+				
+				//creating a random point to spawn the circle at
 				var maxPoint = new Point(view.size.width, view.size.height);
 				var randomPoint = Point.random();
 				var point = maxPoint * randomPoint;
+				
+				//creating the circle and deciding what color and sound it should play
 				var newCircle = new Path.Circle(point, 500)
 				newCircle.fillColor = keyData[event.key].color;
 				keyData[event.key].sound.play();
+				
+				//adding the circle to the array circles
 				circles.push(newCircle);
 			}
 		}
-
+		
+		//function called on everyframe
 		function onFrame(event){
-      for(var i = 0; i < circles.length; i++){
-        circles[i].scale(0.9);
-        circles[i].fillColor.hue += 1;
-        if(circles[i].area < 1){
-        	circles[i].remove();
-          circles.splice(i, 1);
-          console.log(circles);
-        }
-      }
-    }
-    function randomChar() {
-  		var text = "";
-  		var possible = "abcdefghijklmnopqrstuvwxyz";
-    	text += possible.charAt(Math.floor(Math.random() * possible.length));
-  		return text;
-	}
+			//loop through the circles array each frame
+      		for(var i = 0; i < circles.length; i++){
+      			
+  				// change the color and size of the circle
+		        circles[i].scale(0.9);
+		        circles[i].fillColor.hue += 1;
+		        
+		        // delete the circle from the array to free recourcesif its too small
+        		if(circles[i].area < 1){
+        			circles[i].remove();
+          			circles.splice(i, 1);
+        		}
+      		}
+    	}
+    	
+    	
+    	
+    	
+    	// function to generate a random location
+    	function randomChar() {
+  			var text = "";
+  			var possible = "abcdefghijklmnopqrstuvwxyz";
+    		text += possible.charAt(Math.floor(Math.random() * possible.length));
+  			return text;
+		}
+		
 	</script>
 </head>
 <body>
